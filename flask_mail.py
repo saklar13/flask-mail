@@ -270,7 +270,8 @@ class Message(object):
                  charset=None,
                  extra_headers=None,
                  mail_options=None,
-                 rcpt_options=None):
+                 rcpt_options=None,
+                 policy=message_policy):
 
         sender = sender or current_app.extensions['mail'].default_sender
 
@@ -293,6 +294,7 @@ class Message(object):
         self.mail_options = mail_options or []
         self.rcpt_options = rcpt_options or []
         self.attachments = attachments or []
+        self.policy = policy
 
     @property
     def send_to(self):
@@ -387,8 +389,8 @@ class Message(object):
                 f.add_header(key, value)
 
             msg.attach(f)
-        if message_policy:
-            msg.policy = message_policy
+        if self.policy:
+            msg.policy = self.policy
 
         return msg
 
